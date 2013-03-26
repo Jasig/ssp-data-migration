@@ -47,9 +47,9 @@ class MigrationXMLWriter {
         }
         appendEnablePGForeignKey(previousTable)
 
-        result << '\n<!-- ----------------------------------------- -->\n'
+        result << '\n<!-- ################################### -->\n'
         result << "<!-- Footer -->\n"
-        result << '<!-- ----------------------------------------- -->\n\n'
+        result << '<!-- ################################### -->\n\n'
 
         appendEnableMSSQLForeignKey()
         result << XML_CHANGESET_FOOTER
@@ -159,9 +159,9 @@ class MigrationXMLWriter {
     }
 
     def appendTableComment(def table) {
-        result << '\n<!-- ----------------------------------------- -->\n'
+        result << '\n<!-- ################################### -->\n'
         result << "<!-- Changeset section: ${table.tableName} -->\n"
-        result << '<!-- ----------------------------------------- -->\n\n'
+        result << '<!-- ################################### -->\n\n'
     }
 
     def appendDisableMSSQLForeignKey() {
