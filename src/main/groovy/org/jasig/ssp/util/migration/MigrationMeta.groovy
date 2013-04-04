@@ -94,8 +94,7 @@ class MigrationMeta {
 
     ${cliOption(DB_URL_FLAG)}    [Required] The full URL to the source database
     ${cliOption(DB_USERNAME_FLAG)}   [Optional] The username for the source database
-    ${cliOption(DB_PASSWORD_FLAG)}   [Optional] The password for the source database
-    
+    ${cliOption(DB_PASSWORD_FLAG)}   [Optional] The password for the source database. NOTE: If this property is not set you will be prompted to enter a source database password upon opening a connection to the source database.     
 	${cliOption(SCHEMA_FILE_FLAG)}   [Optional] Specify the location for the DB Schema file - the file that specifies what data to export (default: March 2013 tables from last export job)
     ${cliOption(USAGE_FLAG)}, ${HELP_FLAG}    Prints this usage message and performs no processing
 """
