@@ -108,7 +108,7 @@ Options
 
 `--db-username`   [Optional] The username for the source database
 
-`--db-password`   [Optional] The password for the source database
+`--db-password`   [Optional] The password for the source database.  NOTE: If this property is not set you will be prompted to enter a source database password upon opening a connection to the source database.
 
 `--schema-file`   [Optional] Specify the location for the DB Schema file - the file that specifies what data to export (default: March 2013 tables from last export job)
 
