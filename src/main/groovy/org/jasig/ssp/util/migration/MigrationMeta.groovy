@@ -19,6 +19,8 @@
 package org.jasig.ssp.util.migration
 
 class MigrationMeta {
+	
+	public static def AUTHOR = 'data.migration.tool'
 
     public static final def DB_URL_FLAG = 'db-url'
     public static final def DB_USERNAME_FLAG = 'db-username'
@@ -33,22 +35,17 @@ class MigrationMeta {
 
     public static final def DEFAULT_SCHEMA_FILE_NAME = '/BaseConfigDBSchema.xml'
     public static final def DEFAULT_DESTINATION_FILE_NAME = 'SSP_Export_Liquibase_changeset.xml'
-
-    public static final def XML_CHANGESET_HEADER = '''<?xml version="1.0" encoding="UTF-8"?>
-
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
-    http://www.liquibase.org/xml/ns/dbchangelog-ext
-    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-    \n'''
-
-    public static final XML_CHANGESET_FOOTER = '''
-</databaseChangeLog>
-        \n'''
-
+	
+	public static final def DEFAULT_OUTPUT_ENCODING = "UTF-8"
+	
+	public static final NON_UTF_CHARS = [
+		"\u2018":"'",	// ‘
+		"\u2019":"'",	// ’
+		"\u201c":"\"",	// “
+		"\u201d":"\"",  // ”
+		"\u2013":"-"	// – non UTF8 dash
+		]
+		
     public static final USAGE = """
 ----------------------------------
 - Running the program
@@ -98,7 +95,8 @@ class MigrationMeta {
     ${cliOption(DB_URL_FLAG)}    [Required] The full URL to the source database
     ${cliOption(DB_USERNAME_FLAG)}   [Optional] The username for the source database
     ${cliOption(DB_PASSWORD_FLAG)}   [Optional] The password for the source database
-    ${cliOption(SCHEMA_FILE_FLAG)}   [Optional] Specify the location for the DB Schema file - the file that specifies what data to export (default: March 2013 tables from last export job)
+    
+	${cliOption(SCHEMA_FILE_FLAG)}   [Optional] Specify the location for the DB Schema file - the file that specifies what data to export (default: March 2013 tables from last export job)
     ${cliOption(USAGE_FLAG)}, ${HELP_FLAG}    Prints this usage message and performs no processing
 """
 

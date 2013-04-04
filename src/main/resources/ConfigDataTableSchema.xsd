@@ -30,7 +30,7 @@ under the License.
                 <element name="table" minOccurs="1" maxOccurs="unbounded">
                     <complexType>
                         <sequence>
-                            <element name="column" minOccurs="1"
+                            <element name="column" minOccurs="0"
                                      maxOccurs="unbounded">
                                 <complexType>
                                     <attribute name="columnName" type="string"

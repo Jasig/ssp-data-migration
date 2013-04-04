@@ -26,13 +26,13 @@ class MigrationTableObjectDAO {
     def final postgresDriver = 'org.postgresql.Driver'
     def final jtdsDriver = 'net.sourceforge.jtds.jdbc.Driver'
 
-    def password = 'sspadmin'
-    def user = 'sspadmin'
+    def password
+    def user
     def url
     def driver
 
     public MigrationTableObjectDAO(opts) {
-
+		handleOptions(opts)
         if (!(opts[DB_URL_FLAG])) {
             throw new IllegalArgumentException("Must specify a database URL")
         }
@@ -45,9 +45,6 @@ class MigrationTableObjectDAO {
         } else {
             throw new IllegalArgumentException("Unable to detect target database type. Expect database url to contain either \"postgresql\" or \"jtds\"")
         }
-
-        user = opts[DB_USERNAME_FLAG]
-        password = opts[DB_PASSWORD_FLAG]
     }
 
     def selectAllFromIteratedTables(def tables) {
@@ -64,4 +61,12 @@ class MigrationTableObjectDAO {
         sql.close()
         tableObjects
     }
+	
+	def handleOptions(opts) {
+		user = opts[DB_USERNAME_FLAG]?: 'sspadmin'
+		password = opts[DB_PASSWORD_FLAG]?: 'sspadmin'
+		if(opts[DB_PASSWORD_FLAG] == null && System.console() != null) {	
+			password = System.console().readLine("Enter the source database password: ")
+		}
+	}	
 }

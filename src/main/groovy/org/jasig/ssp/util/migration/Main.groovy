@@ -46,7 +46,6 @@ class Main {
             usage()
             System.exit(1)
         }
-
         def processedArgs = [:]
         def expecting = null
         args.each { it ->
