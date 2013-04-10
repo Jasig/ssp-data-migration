@@ -61,19 +61,19 @@ class Main {
                     expecting = DB_URL_FLAG
                 }
             } else if (it.startsWith(cliOption(SCHEMA_FILE_FLAG))) {
-                if (hasValue(it)) {
+                if (hasValue(it, SCHEMA_FILE_FLAG)) {
                     processedArgs[SCHEMA_FILE_FLAG] = valueOf(it, SCHEMA_FILE_FLAG)
                 } else {
                     expecting = SCHEMA_FILE_FLAG
                 }
             } else if (it.startsWith(cliOption(DB_USERNAME_FLAG))) {
-                if (hasValue(it)) {
+                if (hasValue(it, DB_USERNAME_FLAG)) {
                     processedArgs[DB_USERNAME_FLAG] = valueOf(it, DB_USERNAME_FLAG)
                 } else {
                     expecting = DB_USERNAME_FLAG
                 }
             } else if (it.startsWith(cliOption(DB_PASSWORD_FLAG))) {
-                if (hasValue(it)) {
+                if (hasValue(it, DB_PASSWORD_FLAG)) {
                     processedArgs[DB_PASSWORD_FLAG] = valueOf(it, DB_PASSWORD_FLAG)
                 } else {
                     expecting = DB_PASSWORD_FLAG
