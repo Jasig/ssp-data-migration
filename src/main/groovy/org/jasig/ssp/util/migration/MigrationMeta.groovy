@@ -28,6 +28,7 @@ class MigrationMeta {
     public static final def USAGE_FLAG = 'usage'
     public static final def HELP_FLAG = 'help'
     public static final def SCHEMA_FILE_FLAG = 'schema-file'
+	public static final def DISABLE_FKS_FLAG = 'disable-fks'
 
     public static def cliOption(name) {
         "--${name}"
@@ -47,6 +48,36 @@ class MigrationMeta {
 		]
 		
     public static final USAGE = """
+----------------------------------
+- Using this program
+----------------------------------
+
+	This program outputs (via stdout) a fully formed liquibase xml changeset 
+	from the source database which can then be used to populate the target
+	database. This program itself does NOT run the changeset to populate the
+	target database.
+
+	Note about Postgres:
+		By default, this program will output liquibase changesets to 
+		automatically disable and enable foreign key dependencies. 
+		The issue is that Postgres requires a database superuser to
+		run those commands. The two options are:
+
+		1) Run this program and receive the changesets with the logic to 
+		   disable/enable the keys. When running the generated changeset
+		   to populate the target database, you MUST provide credentials 
+		   for a superuser on the target Postgres database.
+		
+		2) Run this program with the option 
+
+			${cliOption(DISABLE_FKS_FLAG)}=false
+
+		   Which will generate the liquibase logic without the disable/enable 
+		   changesets. You will have to disable foreign key constraints before
+		   running the generated changeset, and re-enable the foreign key
+		   constraints after the generated changeset has run.
+
+
 ----------------------------------
 - Running the program
 ----------------------------------
@@ -87,7 +118,6 @@ class MigrationMeta {
 
     %> gradle -q run -PcliArgs="${cliOption(DB_URL_FLAG)}=jdbc:postgresql://localhost:5432/ssp" > migration.xml
 
-
 ----------------------------------
 - Options
 ----------------------------------
@@ -96,7 +126,9 @@ class MigrationMeta {
     ${cliOption(DB_USERNAME_FLAG)}   [Optional] The username for the source database
     ${cliOption(DB_PASSWORD_FLAG)}   [Optional] The password for the source database. NOTE: If this property is not set you will be prompted to enter a source database password upon opening a connection to the source database.     
 	${cliOption(SCHEMA_FILE_FLAG)}   [Optional] Specify the location for the DB Schema file - the file that specifies what data to export (default: March 2013 tables from last export job)
+	${cliOption(DISABLE_FKS_FLAG)}	 [Optional] Specify whether to print out changesets that will disable then enable the foreign key dependencies in both MS SQL server and Postgres. See note above about Postgres. Default is 'true' (it will print out the disable/enable logic)
     ${cliOption(USAGE_FLAG)}, ${HELP_FLAG}    Prints this usage message and performs no processing
+
 """
 
     public static final def UNIX_TIMESTAMP = /[0-9]{1,4}-[0-9]{1,2}-[0-9]{1,2} [0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}.[0-9]{1,2}/

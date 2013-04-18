@@ -44,12 +44,12 @@ class Main {
         args[0].contains(cliOption(HELP_FLAG)) ||
                 args[0].contains(cliOption(USAGE_FLAG)))) {
             usage()
-            System.exit(1)
+            System.exit(0)
         }
         def processedArgs = [:]
         def expecting = null
         args.each { it ->
-            if (expecting && !(isCliOption)) {
+            if (expecting) {
                 processedArgs[expecting] = it
                 return
             }
@@ -61,22 +61,28 @@ class Main {
                     expecting = DB_URL_FLAG
                 }
             } else if (it.startsWith(cliOption(SCHEMA_FILE_FLAG))) {
-                if (hasValue(it)) {
+                if (hasValue(it, SCHEMA_FILE_FLAG)) {
                     processedArgs[SCHEMA_FILE_FLAG] = valueOf(it, SCHEMA_FILE_FLAG)
                 } else {
                     expecting = SCHEMA_FILE_FLAG
                 }
             } else if (it.startsWith(cliOption(DB_USERNAME_FLAG))) {
-                if (hasValue(it)) {
+                if (hasValue(it, DB_USERNAME_FLAG)) {
                     processedArgs[DB_USERNAME_FLAG] = valueOf(it, DB_USERNAME_FLAG)
                 } else {
                     expecting = DB_USERNAME_FLAG
                 }
             } else if (it.startsWith(cliOption(DB_PASSWORD_FLAG))) {
-                if (hasValue(it)) {
+                if (hasValue(it, DB_PASSWORD_FLAG)) {
                     processedArgs[DB_PASSWORD_FLAG] = valueOf(it, DB_PASSWORD_FLAG)
                 } else {
                     expecting = DB_PASSWORD_FLAG
+                }
+            } else if (it.startsWith(cliOption(DISABLE_FKS_FLAG))) {
+                if (hasValue(it, DISABLE_FKS_FLAG)) {
+                    processedArgs[DISABLE_FKS_FLAG] = valueOf(it, DISABLE_FKS_FLAG)
+                } else {
+                    expecting = DISABLE_FKS_FLAG
                 }
             }
         }
@@ -106,8 +112,6 @@ class Main {
 
     private static def defaultSchema() {
         MigrationXMLParser.class.getResourceAsStream(DEFAULT_SCHEMA_FILE_NAME)
-//        println MigrationXMLParser.class.getResource(DEFAULT_SCHEMA_FILE_NAME)
-//        new File(MigrationXMLParser.class.getResource(DEFAULT_SCHEMA_FILE_NAME).toURI()).getAbsolutePath();
     }
 
     private static def sayErr(msg) {

@@ -20,13 +20,18 @@ package org.jasig.ssp.util.migration
 
 import static MigrationMeta.*
 import groovy.xml.*
+import org.codehaus.groovy.runtime.*;
 
 class MigrationXMLWriter {    
 	
     def out
+	def outputForeignKeys = true
 
     def MigrationXMLWriter(out, opts) {
         this.out = out as OutputStream
+		if(opts[DISABLE_FKS_FLAG].toString().toLowerCase() == "false") {
+			outputForeignKeys = false
+		}
     }
 
     /** Writes the Liquibase XML for the given List&lt;MigrationTableObject&gt;
@@ -46,23 +51,33 @@ class MigrationXMLWriter {
 				, "xmlns:xsi" : "http://www.w3.org/2001/XMLSchema-instance"
 				, "xsi:schemaLocation" : "http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd") 
 			{ 
-				appendDisableForignKeys(builder, tableObjects)				
-				changeSet(id:'data migration tool - insert migrated data', author:AUTHOR) {
+				if(outputForeignKeys) {
+					appendDisableForeignKeys(builder, tableObjects)
+				}	
+				changeSet(id:"DMT - insert migrated data - ${getCurrentDate()}", author:AUTHOR) {
 					tableObjects.each { table ->
 						if(previousTable != table.tableName) {
 							mkp.yieldUnescaped(generateNewSectionComment(table.tableName))
+							appendTableDelete(builder, table)
 						}
 						appendTableInsert(builder, table)
 						appendTableRollBack(builder, table)
 						previousTable = table.tableName
 					}	
-				}				
-				appendEnableForignKeys(builder, tableObjects)
+				}	
+				if(outputForeignKeys) {
+					appendEnableForeignKeys(builder, tableObjects)
+				}
 			}
 		}
 		
 		out << XmlUtil.serialize(xml)		
     }
+	
+	def appendTableDelete(xml, table) {
+		xml.delete(tableName:"${table.tableName}") {}
+	}
+	
     /** Appends a complete changeSets for a MigrationTableObject
      *
      * @param table a MigrationTableObject to write a changeSets for
@@ -76,6 +91,12 @@ class MigrationXMLWriter {
 		}
     }
 	
+	/** Appends a rollback that deletes a spcific record from a table. 
+	 * 
+	 * @param xml the xml builder
+	 * @param table the table to perform the rollback on
+	 * @return void
+	 */
 	def appendTableRollBack(xml, table) {
 		xml.rollback {
 			xml.delete(tableName:"${table.tableName}") {
@@ -101,30 +122,42 @@ class MigrationXMLWriter {
         }
     }
 	
-	def appendDisableForignKeys(xml, tables) {
-		xml.changeSet(id:'data migration tool - disable FK Constraints MSSQL', author:AUTHOR, dbms:'mssql') {
+	/** Appends a statement to disable foreign keys
+	 * 
+	 * @param xml the xml builder
+	 * @param tables the tables to disable the FK constraints on (all tables)
+	 * @return void
+	 */
+	def appendDisableForeignKeys(xml, tables) {
+		xml.changeSet(id:"DMT - disable FK Constraints MSSQL - ${getCurrentDate()}", author:AUTHOR, dbms:'mssql') {
 			xml.sql("execute sp_msforeachtable \"ALTER TABLE ? NOCHECK CONSTRAINT all\"")
 		}
 		def previousTable
-		xml.changeSet(id:'data migration tool - disable FK Constraints Postgresql', author:AUTHOR, dbms:'postgresql') {
+		xml.changeSet(id:"DMT - disable FK Constraints Postgresql - ${getCurrentDate()}", author:AUTHOR, dbms:'postgresql') {
 			tables.each { table ->
 				if(previousTable != table.tableName) {
-					xml.sql("ALTER TABLE ${table.tableName} DISABLE TRIGGER USER")
+					xml.sql("ALTER TABLE ${table.tableName} DISABLE TRIGGER ALL")
 				}
 				previousTable = table.tableName
 			}
 		}
 	}
 	
-	def appendEnableForignKeys(xml, tables) {
-		xml.changeSet(id:'data migration tool - enable FK Constraints MSSQL', author:AUTHOR, dbms:'mssql') {
+	/** Appends a statement to enable foreign keys
+	 *
+	 * @param xml the xml builder
+	 * @param tables the tables to enable the FK constraints on (all tables)
+	 * @return void
+	 */
+	def appendEnableForeignKeys(xml, tables) {
+		xml.changeSet(id:"DMT - enable FK Constraints MSSQL - ${getCurrentDate()}", author:AUTHOR, dbms:'mssql') {
 			xml.sql("execute sp_msforeachtable \"ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all\"")
 		}
 		def previousTable
-		xml.changeSet(id:'data migration tool - enagle FK Constraints Postgresql', author:AUTHOR, dbms:'postgresql') {
+		xml.changeSet(id:"DMT - enable FK Constraints Postgresql - ${getCurrentDate()}", author:AUTHOR, dbms:'postgresql') {
 			tables.each { table ->	
 				if(previousTable != table.tableName) {			
-					xml.sql("ALTER TABLE ${table.tableName} ENABLE TRIGGER USER")
+					xml.sql("ALTER TABLE ${table.tableName} ENABLE TRIGGER ALL")
 				}
 				previousTable = table.tableName
 			}
@@ -137,6 +170,11 @@ class MigrationXMLWriter {
 				|<!-- ################################### -->\n""".stripMargin()
 	}
 	
+	/** Replaces non-UTF 8 characters with UTF-8 friendly characters
+	 * 
+	 * @param value the value to check and transform
+	 * @return the transformed string (or the original string if it did not contain any non-UTF-8 characters)
+	 */
 	def UTFTransform(value) {
 		
 		if(value.getClass() != String &&
@@ -150,5 +188,9 @@ class MigrationXMLWriter {
 			}		
 		}
 		return value
+	}
+	
+	private def getCurrentDate() {
+		DateGroovyMethods.format(new Date(), 'MM/dd/yy HH:mm')
 	}
 }
