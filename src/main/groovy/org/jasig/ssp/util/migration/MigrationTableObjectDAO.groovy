@@ -20,6 +20,7 @@ package org.jasig.ssp.util.migration
 
 import static MigrationMeta.*
 import groovy.sql.Sql
+import net.sourceforge.jtds.jdbc.ClobImpl
 
 class MigrationTableObjectDAO {
 
@@ -54,7 +55,7 @@ class MigrationTableObjectDAO {
             sql.eachRow("SELECT * FROM ${Sql.expand(table.tableName)}") { result ->
                 def tableObject = new MigrationTableObject()
                 tableObject.tableName = table.tableName
-                tableObject.columns = result.toRowResult()
+                tableObject.columns = filterColumns(result);
                 tableObjects.add(tableObject);
             }
         }
@@ -69,4 +70,14 @@ class MigrationTableObjectDAO {
 			password = System.console().readLine("Enter the source database password: ")
 		}
 	}	
+	
+	def filterColumns(result) {
+		def results = result.toRowResult()
+		results.each { key, value ->
+			if(value?.class == ClobImpl) {
+				results[key] = value.getCharacterStream().getText()
+			}
+		}
+		return results
+	}
 }
