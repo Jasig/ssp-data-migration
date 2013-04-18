@@ -68,7 +68,7 @@ The app can be executed in at least three different ways:
 1. Gradle run command. This is the easiest way to run the app if you are
 tweaking the source code:
 
-    `%> gradle -q run -PcliArgs="<opts>"`
+    `%> gradle -q run -PsysProps="<opts>" -PcliArgs="<opts>"`
 
   Note that `<opts>` parsing is naive so spaces in argument values will not work
   as expected.
@@ -83,6 +83,9 @@ tweaking the source code:
 
   Use this execution mechanism if you've received a zip or tar of the
   application.
+
+  Use the JVM_OPTS env var to set JVM properties when executing the app in this
+  way.
 
 3. Without Gradle. Don't know why you'd want to do this as it is significantly
 more verbose and you'll need to do more legwork to make your JDBC driver
@@ -108,7 +111,7 @@ Options
 
 `--db-username`   [Optional] The username for the source database
 
-`--db-password`   [Optional] The password for the source database
+`--db-password`   [Optional] The password for the source database.  NOTE: If this property is not set you will be prompted to enter a source database password upon opening a connection to the source database.
 
 `--schema-file`   [Optional] Specify the location for the DB Schema file - the file that specifies what data to export (default: March 2013 tables from last export job)
 

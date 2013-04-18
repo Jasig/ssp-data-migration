@@ -22,9 +22,19 @@ apply plugin:'application'
 
 mainClassName = "org.jasig.ssp.util.migration.Main"
 
+def toMap(arr) {
+    arr.collectEntries { it ->
+        def nv = it.split("=");
+        [nv[0],nv[1]]
+    }
+}
+
 run {
     if(project.hasProperty("cliArgs")){
       args cliArgs.tokenize()
+    }
+    if(project.hasProperty("sysProps")){
+      systemProperties toMap(sysProps.tokenize())
     }
 }
 
