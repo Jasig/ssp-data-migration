@@ -60,8 +60,10 @@ class MigrationXMLWriter {
 							mkp.yieldUnescaped(generateNewSectionComment(table.tableName))
 							appendTableDelete(builder, table)
 						}
-						appendTableInsert(builder, table)
-						appendTableRollBack(builder, table)
+						if ( table.columns ) {
+						  appendTableInsert(builder, table)
+						  appendTableRollBack(builder, table)
+						}
 						previousTable = table.tableName
 					}	
 				}	

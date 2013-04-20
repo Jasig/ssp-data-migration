@@ -51,13 +51,21 @@ class MigrationTableObjectDAO {
     def selectAllFromIteratedTables(def tables) {
         def tableObjects = []
         def sql = Sql.newInstance(url, user, password, driver)
+        def tableObject
+        // "meta" closure ensures we always get a MigrationTableObject,
+        // even for empty tables, which allows us to generate a delete
+        // with no corresponding inserts for that table
         tables.each { table ->
-            sql.eachRow("SELECT * FROM ${Sql.expand(table.tableName)}") { result ->
-                def tableObject = new MigrationTableObject()
+            sql.eachRow("SELECT * FROM ${Sql.expand(table.tableName)}",
+            { meta ->
+                tableObject = new MigrationTableObject()
                 tableObject.tableName = table.tableName
-                tableObject.columns = filterColumns(result);
+                tableObject.columns = [:]
                 tableObjects.add(tableObject);
-            }
+            },
+            { result ->
+                tableObject.columns = filterColumns(result);
+            })
         }
         sql.close()
         tableObjects
