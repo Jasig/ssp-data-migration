@@ -118,7 +118,9 @@ class MigrationXMLWriter {
 		columnValue = UTFTransform(columnValue)	
 			
         if (columnValue.toString().contains('<')) {
-           xml.column(name:"${columnName}", "<![CDATA[ ${columnValue} ]]>")
+            xml.column(name: "${columnName}") {
+                xml.mkp.yieldUnescaped("<![CDATA[ ${columnValue} ]]>")
+            }
         } else if(columnValue != null) {
             xml.column(name:"${columnName}", value:"${columnValue}")
         }
