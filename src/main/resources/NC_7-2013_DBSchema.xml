@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+Licensed to Jasig under one or more contributor license
+agreements. See the NOTICE file distributed with this work
+for additional information regarding copyright ownership.
+Jasig licenses this file to you under the Apache License,
+Version 2.0 (the "License"); you may not use this file
+except in compliance with the License. You may obtain a
+copy of the License at:
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on
+an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied. See the License for the
+specific language governing permissions and limitations
+under the License.
+
+-->
+<tns:configData xmlns:tns="http://http://www.jasig.org//ConfigDataTableSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://http://www.jasig.org//ConfigDataTableSchema ConfigDataTableSchema.xsd ">
+  
+  <tns:table tableName="campus"/>  
+  <tns:table tableName="category"/>  
+  <tns:table tableName="challenge"/>  
+  <tns:table tableName="challenge_category"/>  
+  <tns:table tableName="challenge_challenge_referral"/>  
+  <tns:table tableName="challenge_referral"/>  
+  <tns:table tableName="child_care_arrangement"/>  
+  <tns:table tableName="citizenship"/>  
+  <tns:table tableName="confidentiality_disclosure_agreement"/>  
+  <tns:table tableName="confidentiality_level"/>  
+  <tns:table tableName="config"/>
+  <tns:table tableName="early_alert_outcome"/>  
+  <tns:table tableName="early_alert_outreach"/>  
+  <tns:table tableName="early_alert_reason"/>  
+  <tns:table tableName="early_alert_referral"/>  
+  <tns:table tableName="early_alert_routing"/>  
+  <tns:table tableName="early_alert_suggestion"/>  
+  <tns:table tableName="education_goal"/>  
+  <tns:table tableName="education_level"/>  
+  <tns:table tableName="ethnicity"/>  
+  <tns:table tableName="funding_source"/>  
+  <tns:table tableName="journal_source"/>
+  <tns:table tableName="journal_step"/>  
+  <tns:table tableName="journal_step_detail"/>  
+  <tns:table tableName="journal_step_journal_step_detail"/>  
+  <tns:table tableName="journal_track"/>  
+  <tns:table tableName="journal_track_journal_step"/>  
+  <tns:table tableName="marital_status"/>  
+  <tns:table tableName="message_template"/>  
+  <!-- Omit these tables for NC
+  <tns:table tableName="person"/>  
+  <tns:table tableName="person_demographics"/>  
+  <tns:table tableName="person_education_goal"/>  
+  <tns:table tableName="person_education_plan"/>
+  <tns:table tableName="person_staff_details"/>  
+  -->
+  <tns:table tableName="program_status"/>  
+  <tns:table tableName="program_status_change_reason"/>  
+  <tns:table tableName="referral_source"/>  
+  <tns:table tableName="self_help_guide"/>  
+  <tns:table tableName="self_help_guide_group"/>  
+  <tns:table tableName="self_help_guide_question"/>
+  <tns:table tableName="self_help_guide_self_help_guide_group"/>
+  <tns:table tableName="service_reason"/>
+  <tns:table tableName="special_service_group"/>
+  <tns:table tableName="student_status"/>
+  <tns:table tableName="student_type"/>
+  <tns:table tableName="veteran_status"/>  
+  <tns:table tableName="campus_service"/> 
+  <tns:table tableName="color"/> 
+  <tns:table tableName="disability_accommodation"/> 
+  <tns:table tableName="disability_agency"/> 
+  <tns:table tableName="disability_status"/> 
+  <tns:table tableName="disability_type"/> 
+  <tns:table tableName="elective"/> 
+  <tns:table tableName="lassi"/> 
+  <tns:table tableName="military_affiliation"/> 
+  <tns:table tableName="personality_type"/> 
+  <tns:table tableName="tag"/>
+</tns:configData>
